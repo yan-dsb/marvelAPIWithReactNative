@@ -53,11 +53,11 @@ const ListOfCharacters = ({navigation}) => {
         },
       });
       setCharacters(response.data.data.results);
-    }else{
+    } else {
       getCharacters();
     }
   };
-  const searchDelayed = _.debounce(searchCharacter, 1000);
+  const searchDelayed = _.debounce(searchCharacter, 500);
 
   const getFavouritesCharacters = async () => {
     var data = await getData('favourites');
@@ -104,17 +104,20 @@ const ListOfCharacters = ({navigation}) => {
 
   const shareContent = () => {
     return (
-      <TouchableOpacity style={styles.share} onPress={() => onShare()}>
-        <Image
-          style={styles.shareImage}
-          source={require('../../assets/img/share-option.png')}
-        />
-      </TouchableOpacity>
+      <View style={styles.shareView}>
+        <TouchableOpacity style={styles.share} onPress={() => onShare()}>
+          <Image
+            style={styles.shareImage}
+            source={require('../../assets/img/share-option.png')}
+          />
+          <Text style={styles.shareText}>Share your favourites characters</Text>
+        </TouchableOpacity>
+      </View>
     );
   };
 
   const onShare = async () => {
-    const shareMessage = `Here is my Marvel's favourites characters \n${favourites
+    const shareMessage = `Here is my Marvel's favourites characters: \n${favourites
       .map((fav) => `${fav.name} \n`)
       .join('')}`;
 
@@ -139,19 +142,24 @@ const ListOfCharacters = ({navigation}) => {
       <SafeAreaView style={styles.container}>
         <View style={styles.searchBar}>
           <TextInput
+            placeholderTextColor="#ED1D24"
+            style={styles.searchInput}
             placeholder="Search your favourite character here"
             onChangeText={searchDelayed}
             autoCapitalize="none"
           />
         </View>
         {characters.length > 0 ? (
-          <FlatList
-            data={characters}
-            keyExtractor={(character) => character.id.toString()}
-            renderItem={listCharacters}
-            ListHeaderComponent={() => shareContent()}
-            stickyHeaderIndices={[0]}
-          />
+          <View style={styles.listContainer}>
+            <View style={styles.listSection}>
+              <FlatList
+                data={characters}
+                keyExtractor={(character) => character.id.toString()}
+                renderItem={listCharacters}
+              />
+              {shareContent()}
+            </View>
+          </View>
         ) : (
           <View style={styles.viewNothingFound}>
             <Text style={styles.messageNothingFound}>
@@ -169,17 +177,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     flex: 1,
   },
+  listContainer: {
+    flex: 1,
+  },
+  listSection: {
+    flex: 0.9,
+  },
   searchBar: {
-    marginTop: 32,
-    marginBottom: 10,
+    marginTop: 20,
+    marginBottom: 20,
     padding: 10,
+    width: '80%',
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
-    width: 300,
+    backgroundColor: '#FFFFFF',
     borderRadius: 5,
-    borderColor: '#DAE1E7',
-    borderWidth: 1,
+    borderColor: '#ED1D24',
+    borderWidth: 0.5,
+  },
+  searchInput: {
+    color: '#ED1D24',
   },
   sectionContainer: {
     paddingHorizontal: 24,
@@ -190,18 +208,17 @@ const styles = StyleSheet.create({
   messageNothingFound: {
     textAlign: 'center',
     fontSize: 15,
+    color: '#ED1D24',
+  },
+  shareView: {
+    backgroundColor: '#FFFFFF',
+    marginBottom: 20,
   },
   share: {
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'flex-end',
-    width: 100,
-    marginRight: 60,
-    backgroundColor: '#DAE1E7',
-    borderColor: '#DAE1E7',
-    marginBottom: 10,
-    borderRadius: 5,
-    borderWidth: 1,
+    alignSelf: 'center',
+    padding: 10,
   },
   shareText: {
     color: '#ED1D24',

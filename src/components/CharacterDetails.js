@@ -42,15 +42,15 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 32,
     padding: 24,
-    borderColor: '#DAE1E7',
-    borderWidth: 1,
     borderRadius: 10,
+    borderColor: '#ED1D24',
+    borderWidth: 1,
   },
   name: {
     marginTop: 20,
     fontSize: 18,
     textAlign: 'center',
-    fontWeight: '400',
+    fontWeight: 'bold',
     color: '#ED1D24',
   },
   description: {
@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
   imageCharacter: {
     width: 250,
     height: 250,
+    borderRadius: 125,
     alignSelf: 'center',
   },
 });

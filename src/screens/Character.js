@@ -21,7 +21,7 @@ const Character = ({route}) => {
     });
     setCharacter(response.data.data.results[0]);
   };
-  const getFavouriteCharacter = async (id) => {
+  const getFavouriteCharacter = async () => {
     var data = await getData('favourites');
     if (data != null) {
       data = JSON.parse(data);
@@ -31,7 +31,7 @@ const Character = ({route}) => {
     }
   };
 
-  const storeFavouriteCharacter = async (id, name) => {
+  const storeFavouriteCharacter = async (name) => {
     var favourites = await getData('favourites');
     if (favourites != null) {
       favourites = JSON.parse(favourites);
@@ -60,9 +60,7 @@ const Character = ({route}) => {
             name={character.name}
             image={`${character.thumbnail.path}/standard_amazing.${character.thumbnail.extension}`}
             description={character.description}
-            onPressFavourite={() =>
-              storeFavouriteCharacter(character.id, character.name)
-            }
+            onPressFavourite={() => storeFavouriteCharacter(character.name)}
             favourite={favourite}
           />
         </View>
