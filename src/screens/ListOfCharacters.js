@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listSection: {
-    flex: 0.9,
+    flex: 2,
   },
   searchBar: {
     marginTop: 20,
@@ -230,7 +230,6 @@ const styles = StyleSheet.create({
   },
   shareView: {
     backgroundColor: '#FFFFFF',
-    marginBottom: 20,
   },
   share: {
     justifyContent: 'center',
