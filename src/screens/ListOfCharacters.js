@@ -94,7 +94,10 @@ const ListOfCharacters = ({navigation}) => {
         <CharacterItem
           onPress={() => navigation.navigate('Character', {id: item.id})}
           name={item.name}
-          image={`${item.thumbnail.path}/standard_amazing.${item.thumbnail.extension}`}
+          image={`${item.thumbnail.path.replace(
+            'http',
+            'https',
+          )}/standard_amazing.${item.thumbnail.extension}`}
           onPressFavourite={() => storeFavouritesCharacters(item.id, item.name)}
           favourite={favourite}
         />

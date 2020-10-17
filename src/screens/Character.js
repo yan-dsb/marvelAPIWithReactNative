@@ -58,7 +58,10 @@ const Character = ({route}) => {
         <View style={styles.container}>
           <CharacterDetails
             name={character.name}
-            image={`${character.thumbnail.path}/standard_amazing.${character.thumbnail.extension}`}
+            image={`${character.thumbnail.path.replace(
+              'http',
+              'https',
+            )}/standard_amazing.${character.thumbnail.extension}`}
             description={character.description}
             onPressFavourite={() => storeFavouriteCharacter(character.name)}
             favourite={favourite}
