@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Share,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 
 import _ from 'lodash';
@@ -24,6 +25,8 @@ import {getData, setData} from '../persistence/Store';
 const ListOfCharacters = ({navigation}) => {
   const [characters, setCharacters] = useState([]);
   const [favourites, setFavourites] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     getCharacters();
     getFavouritesCharacters();
@@ -31,7 +34,6 @@ const ListOfCharacters = ({navigation}) => {
   useFocusEffect(
     React.useCallback(() => {
       getFavouritesCharacters();
-
       return () => {};
     }, []),
   );
@@ -40,9 +42,12 @@ const ListOfCharacters = ({navigation}) => {
       params: {ts: auth.ts, apikey: auth.apikey, hash: auth.hash},
     });
     setCharacters(response.data.data.results);
+    setRefreshing(false);
+    setLoading(false);
   };
 
   const searchCharacter = async (term) => {
+    setLoading(true);
     if (term.length > 0) {
       const response = await api.get('/characters', {
         params: {
@@ -53,6 +58,7 @@ const ListOfCharacters = ({navigation}) => {
         },
       });
       setCharacters(response.data.data.results);
+      setLoading(false);
     } else {
       getCharacters();
     }
@@ -79,7 +85,7 @@ const ListOfCharacters = ({navigation}) => {
       );
       setFavourites([...new Set(onlyFavouritesCharacters)]);
       favouritesToSave = [...new Set(onlyFavouritesCharacters)];
-    }else{
+    } else {
       const newFavourite = [{id, name}];
       setFavourites([...favourites, ...newFavourite]);
       favouritesToSave = [...favourites, ...newFavourite];
@@ -120,7 +126,7 @@ const ListOfCharacters = ({navigation}) => {
   };
 
   const onShare = async () => {
-    const shareMessage = `Here is my Marvel's favourites characters: \n${favourites
+    const shareMessage = `Here is my favourites characters of the Marvel Universe: \n${favourites
       .map((fav) => `${fav.name} \n`)
       .join('')}`;
 
@@ -138,6 +144,11 @@ const ListOfCharacters = ({navigation}) => {
     } catch (error) {
       alert(error.message);
     }
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    getCharacters();
   };
   return (
     <>
@@ -159,10 +170,14 @@ const ListOfCharacters = ({navigation}) => {
                 data={characters}
                 keyExtractor={(character) => character.id.toString()}
                 renderItem={listCharacters}
+                refreshing={refreshing}
+                onRefresh={() => onRefresh()}
               />
               {shareContent()}
             </View>
           </View>
+        ) : loading ? (
+          <ActivityIndicator />
         ) : (
           <View style={styles.viewNothingFound}>
             <Text style={styles.messageNothingFound}>
