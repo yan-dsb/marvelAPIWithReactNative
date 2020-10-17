@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native'
 
 
-const CharacterItem = ({name, image, onPress}) =>{
+const CharacterItem = ({name, image, onPress, onPressFavourite, favourite}) =>{
     const imageNotAvailable = image.includes('image_not_available');
     var source = {};
     if(imageNotAvailable){
@@ -10,18 +10,26 @@ const CharacterItem = ({name, image, onPress}) =>{
     }else{
       source.uri = image
     }
+    const sourceFavourite = favourite ? require('../../assets/img/like.png') : require('../../assets/img/nolike.png')
     return (
         <>
         <View style={styles.container}>
             <View style={styles.separator} />
-            <TouchableOpacity
-                accessibilityRole={'button'}
-                onPress={onPress}
-                style={styles.characterContainer}>
-                <Image style={{width: 50, height: 50, marginLeft: 30}} source={source} />
-                <Text style={styles.name}>{name}</Text>
-                
+              <TouchableOpacity
+                  accessibilityRole={'button'}
+                  onPress={onPress}
+                  style={styles.characterContainer}
+                  >
+                  <Image style={styles.image} source={source} />
+                  <Text style={styles.name}>{name}</Text>
+                  <TouchableOpacity 
+              accessibilityRole={'button'}
+              onPress={onPressFavourite}
+            >
+              <Image style={styles.like} source={sourceFavourite} />
             </TouchableOpacity>
+              </TouchableOpacity>
+              
         </View>
         </>
     )
@@ -37,19 +45,25 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: 20,
+      padding: 10,
     },
     separator: {
       backgroundColor: '#DAE1E7',
-      height: 1,
+      height: 2,
     },
     name: {
-      flex: 2,
-      fontSize: 18,
-      paddingLeft: 50,
+      fontSize: 16,
+      // paddingLeft: 50,
       fontWeight: '400',
       color: "#ED1D24",
     },
+    image: {
+      width: 60, 
+      height: 60, 
+    },
+    like: {
+      width: 40, height: 40
+    }
   });
 
   export default CharacterItem;
