@@ -279,6 +279,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     backgroundColor: '#000042',
+    borderRadius: 5,
   },
   showMoreText: {
     color: '#FFFFFF',
