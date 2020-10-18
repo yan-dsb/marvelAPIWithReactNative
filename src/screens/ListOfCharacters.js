@@ -159,6 +159,7 @@ const ListOfCharacters = ({navigation}) => {
   };
 
   const onRefresh = () => {
+    this.search.clear();
     setRefreshing(true);
     getCharacters();
   };
@@ -168,6 +169,9 @@ const ListOfCharacters = ({navigation}) => {
       <SafeAreaView style={styles.container}>
         <View style={styles.searchBar}>
           <TextInput
+            ref={(input) => {
+              this.search = input;
+            }}
             placeholderTextColor="#ED1D24"
             style={styles.searchInput}
             placeholder="Search your favourite character here"
