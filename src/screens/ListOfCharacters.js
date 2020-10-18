@@ -45,7 +45,12 @@ const ListOfCharacters = ({navigation}) => {
     const response = await api.get('/characters', {
       params: {ts: auth.ts, apikey: auth.apikey, hash: auth.hash, offset},
     });
-    setCharacters([...characters, ...response.data.data.results]);
+    if (offset === 0) {
+      setCharacters(response.data.data.results);
+    } else {
+      setCharacters([...characters, ...response.data.data.results]);
+    }
+
     setOffset(offset + response.data.data.results.length);
     setRefreshing(false);
     setLoading(false);
@@ -64,6 +69,7 @@ const ListOfCharacters = ({navigation}) => {
         },
       });
       setCharacters(response.data.data.results);
+      setOffset(0);
       setLoading(false);
     } else {
       getCharacters();
