@@ -25,8 +25,11 @@ import {getData, setData} from '../persistence/Store';
 const ListOfCharacters = ({navigation}) => {
   const [characters, setCharacters] = useState([]);
   const [favourites, setFavourites] = useState([]);
+  const [search, setSearch] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [offset, setOffset] = useState(0);
+
   useEffect(() => {
     getCharacters();
     getFavouritesCharacters();
@@ -38,15 +41,18 @@ const ListOfCharacters = ({navigation}) => {
     }, []),
   );
   const getCharacters = async () => {
+    console.log(offset);
     const response = await api.get('/characters', {
-      params: {ts: auth.ts, apikey: auth.apikey, hash: auth.hash},
+      params: {ts: auth.ts, apikey: auth.apikey, hash: auth.hash, offset},
     });
-    setCharacters(response.data.data.results);
+    setCharacters([...characters, ...response.data.data.results]);
+    setOffset(offset + response.data.data.results.length);
     setRefreshing(false);
     setLoading(false);
   };
 
   const searchCharacter = async (term) => {
+    setSearch(term);
     setLoading(true);
     if (term.length > 0) {
       const response = await api.get('/characters', {
@@ -172,6 +178,19 @@ const ListOfCharacters = ({navigation}) => {
                 renderItem={listCharacters}
                 refreshing={refreshing}
                 onRefresh={() => onRefresh()}
+                ListFooterComponent={() => {
+                  if (search.length === 0) {
+                    return (
+                      <TouchableOpacity
+                        style={styles.showMore}
+                        onPress={() => getCharacters()}>
+                        <Text style={styles.showMoreText}>Show more</Text>
+                      </TouchableOpacity>
+                    );
+                  } else {
+                    return <></>;
+                  }
+                }}
               />
               {shareContent()}
             </View>
@@ -244,6 +263,21 @@ const styles = StyleSheet.create({
   shareImage: {
     width: 25,
     height: 25,
+  },
+  showMore: {
+    marginTop: 20,
+    marginBottom: 20,
+    padding: 10,
+    width: '80%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: '#000042',
+  },
+  showMoreText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: 'bold',
   },
 });
 
